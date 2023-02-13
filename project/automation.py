@@ -1,26 +1,14 @@
-import pandas as pd
-import os
-import db
-message="""
-    1)Insertar data:
-    2)Actualizar data del dolar
-"""
-print(message)
-a=int(input('ingrese la tarea a realizar: '))
+import sqlite3
+conn=sqlite3.connect('tienda.db')
+cursor_obj = conn.cursor()
 
+with open('project\dataTienda.csv','r') as file:
+    grabar=0
+    for fila in file:
+        cursor_obj.execute('INSERT INTO ORDENES VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)', fila.split(";"))
+        conn.commit()
+        grabar+=1
+conn.close()
 
-def insertData():
-    #obtiene la ruta absoluta
-    path_=os.getcwd()+'\dataTienda.csv'
-    #conection a bd
-    conn=db.Conection('tienda.db')
-    cursor=conn.getCursor()
-    print(path_)
-    df = pd. read_csv (path_, sep = ";") 
-    ### logica para insertar 
-    for i,fila in df.iterrows():
-        print(fila['ORDER_ID'])
+print("INSERCION FINALIZADA")
 
-def updateDolar():
-    url = 'https://api.apis.net.pe/v1/tipo-cambio-sunat' #tipo cambio sunat
-    pass
